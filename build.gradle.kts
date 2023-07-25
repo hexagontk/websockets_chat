@@ -19,7 +19,7 @@ apply(from = "$gradleScripts/native.gradle")
 defaultTasks("build")
 
 version="1.0.0"
-group="org.example"
+group="org.hexagon.ws-chat"
 description="Service's description"
 
 dependencies {
