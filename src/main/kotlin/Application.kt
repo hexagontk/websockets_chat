@@ -9,13 +9,11 @@ import com.hexagonkt.http.model.Header
 import com.hexagonkt.http.model.ws.WsSession
 import com.hexagonkt.http.server.HttpServer
 import com.hexagonkt.http.server.HttpServerSettings
-import com.hexagonkt.http.server.jetty.JettyServletAdapter
-import com.hexagonkt.http.server.serve
+import com.hexagonkt.http.server.netty.serve
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 internal val settings = HttpServerSettings(ALL_INTERFACES, 9090)
-internal val serverAdapter = JettyServletAdapter(minThreads = 4)
 
 internal lateinit var server: HttpServer
 internal val clientSessions = hashMapOf<WsSession, String>()
@@ -24,7 +22,7 @@ internal fun main() {
     LoggingManager.defaultLoggerName = "org.hexagon.ws-chat"
     var userNumber = 1
 
-    server = serve(serverAdapter, settings) {
+    server = serve(settings) {
         on("*") {
             send(headers = response.headers + Header("server", "Hexagon/2.8"))
         }
@@ -33,11 +31,12 @@ internal fun main() {
             ok("Hello, World!", contentType = ContentType(TEXT_PLAIN))
         }
 
-        ws("/chat") {
+        ws("/chat/{name}") {
+            val nameParam = pathParameters["name"]
             logger.info { "/chat" }
             accepted(
                 onConnect = {
-                    val name = userNumber++.toString()
+                    val name = nameParam ?: userNumber++.toString()
                     clientSessions[this] = name
                     logger.info { "onConnect: $name" }
                     broadcastMsg("Server", "$name joined the chat.")
@@ -65,7 +64,7 @@ fun broadcastMsg(sender: String?, msg: String) {
     val data = mapOf(
         "message" to message,
         "userList" to clientSessions.values
-    ).toString().toByteArray()
+    ).toString()
 
     clientSessions.forEach { (session, _) ->
         session.send(data)
