@@ -1,5 +1,6 @@
 package org.example
 
+import com.google.gson.Gson
 import com.hexagonkt.core.ALL_INTERFACES
 import com.hexagonkt.core.logging.LoggingManager
 import com.hexagonkt.core.logging.logger
@@ -10,8 +11,6 @@ import com.hexagonkt.http.model.ws.WsSession
 import com.hexagonkt.http.server.HttpServer
 import com.hexagonkt.http.server.HttpServerSettings
 import com.hexagonkt.http.server.netty.serve
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 internal val settings = HttpServerSettings(ALL_INTERFACES, 9090)
 
@@ -56,17 +55,16 @@ internal fun main() {
     }
 }
 
-val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+val gson = Gson()
 fun broadcastMsg(sender: String?, msg: String) {
-    val time = LocalDateTime.now().format(formatter)
-    val message = "$time $sender: $msg"
-
+    val message = "$sender: $msg"
     val data = mapOf(
         "message" to message,
         "userList" to clientSessions.values
-    ).toString()
+    )
+    val dataJson = gson.toJson(data)
 
     clientSessions.forEach { (session, _) ->
-        session.send(data)
+        session.send(dataJson)
     }
 }
