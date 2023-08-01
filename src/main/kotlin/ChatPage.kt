@@ -1,4 +1,4 @@
-package org.example
+package com.hexagonkt.ws_chat
 
 import com.google.gson.Gson
 import com.hexagonkt.core.ALL_INTERFACES
@@ -18,7 +18,7 @@ internal lateinit var server: HttpServer
 internal val clientSessions = hashMapOf<WsSession, String>()
 
 internal fun main() {
-    LoggingManager.defaultLoggerName = "org.hexagon.ws-chat"
+    LoggingManager.defaultLoggerName = "com.hexagonkt.ws_chat"
     var userNumber = 1
 
     server = serve(settings) {
@@ -55,8 +55,8 @@ internal fun main() {
     }
 }
 
-val gson = Gson()
-fun broadcastMsg(sender: String?, msg: String) {
+internal val gson = Gson()
+internal fun broadcastMsg(sender: String?, msg: String) {
     val message = "$sender: $msg"
     val data = mapOf(
         "message" to message,

@@ -10,7 +10,7 @@ val hexagonVersion = "2.8.0"
 val gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 
 ext.set("options", "-Xmx48m")
-ext.set("applicationClass", "org.example.ApplicationKt")
+ext.set("applicationClass", "com.hexagonkt.ws_chat.ChatPage")
 
 apply(from = "$gradleScripts/kotlin.gradle")
 apply(from = "$gradleScripts/application.gradle")
@@ -19,7 +19,7 @@ apply(from = "$gradleScripts/native.gradle")
 defaultTasks("build")
 
 version="1.0.0"
-group="org.hexagon.ws-chat"
+group="com.hexagonkt.ws_chat"
 description="Service's description"
 
 dependencies {
