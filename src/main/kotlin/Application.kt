@@ -20,7 +20,7 @@ internal fun main() {
     var userNumber = 1
 
     server = serve(settings) {
-        on("*") {
+        after("*") {
             send(headers = response.headers + Header("server", "Hexagon/3.5"))
         }
 
