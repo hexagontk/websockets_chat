@@ -2,7 +2,6 @@ package org.example
 
 import com.google.gson.Gson
 import com.hexagonkt.core.ALL_INTERFACES
-import com.hexagonkt.core.logging.LoggingManager
 import com.hexagonkt.core.logging.logger
 import com.hexagonkt.core.media.TEXT_PLAIN
 import com.hexagonkt.http.model.ContentType
@@ -18,12 +17,11 @@ internal lateinit var server: HttpServer
 internal val clientSessions = hashMapOf<WsSession, String>()
 
 internal fun main() {
-    LoggingManager.defaultLoggerName = "org.hexagon.ws-chat"
     var userNumber = 1
 
     server = serve(settings) {
         on("*") {
-            send(headers = response.headers + Header("server", "Hexagon/2.8"))
+            send(headers = response.headers + Header("server", "Hexagon/3.5"))
         }
 
         get("/text") {
